@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hermes-oauth-openai-codex"
+version = "0.1.0"
+description = "ChatGPT-Plus OAuth PKCE login that writes to Hermes's auth.json credential pool."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Thomas" }]
+keywords = ["hermes", "openai", "oauth", "pkce", "codex", "chatgpt"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = []
+
+[project.scripts]
+hermes-oauth-codex = "hermes_oauth_openai_codex.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["hermes_oauth_openai_codex*"]

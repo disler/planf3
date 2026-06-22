@@ -11,7 +11,21 @@ Scripts (run with `uv run`, needs `OPENAI_API_KEY`):
 - Create image: `uv run scripts/generate_gpt_image.py "<prompt>" <output.png> --size 1536x1024 --quality high`
 - Edit image: `uv run scripts/edit_gpt_image.py "<instruction>" <output.png> <input.png> --size 1536x1024 --quality high`
 
-Shared rules for every image prompt:
+## `OPENAI_API_KEY`
+
+The scripts read `OPENAI_API_KEY` from `.env` via `python-dotenv`. Two ways to populate it:
+
+1. **ChatGPT-Plus subscription (default)**: install and run the sibling skill `hermes-oauth-openai-codex` once — it performs a PKCE browser login and writes the OAuth bearer into this `.env`. No `sk-...` API key needed; the scripts hit `chatgpt.com/backend-api/codex/responses` with the bearer.
+2. **OpenAI API key (legacy)**: paste an `sk-...` key into this `.env` directly. The scripts will fall back to `api.openai.com/v1/images/generations` if you swap the endpoint back.
+
+The ChatGPT-Plus path is the default — it costs no API credits and works on the same subscription that powers ChatGPT image generation in the UI.
+
+## Auto-refresh
+
+`_codex_common.refresh_if_needed()` runs at the start of every script invocation. It decodes the JWT's `exp` claim; if the token expires within 48 hours, it shells out to `python -m hermes_oauth_openai_codex refresh` to rotate the token before the image call. Pass `--refresh-skew-seconds 0` to disable, or any other value to widen/narrow the window.
+
+## Shared rules for every image prompt
+
 - always generate in wide format (`--size 1536x1024`) at high quality (`--quality high`)
 - convey the one or two core ideas of that section for a professional software engineer
 - match the plan's synced visual identity (professional, focused, minimal)
